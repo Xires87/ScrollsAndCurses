@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "endercurse",
+  "version": "${version}",
+
+  "name": "Ender Curse",
+  "description": "Adds 2 enchantments and new status effect",
+  "authors": [
+    "Wookash Fryc"
+  ],
+  "contact": {
+    "email": "frycmod@gmail.com"
+  },
+
+  "license": "MIT",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.fryc.endercurse.EnderCurse"
+    ]
+  },
+  "mixins": [
+    "endercurse.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric-api": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
