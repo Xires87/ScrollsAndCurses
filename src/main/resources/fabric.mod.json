@@ -1,28 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "endercurse",
+  "id": "frycscrolls",
   "version": "${version}",
 
-  "name": "Ender Curse",
-  "description": "Adds 2 enchantments and new status effect",
+  "name": "Scrolls and Curses",
+  "description": "Adds magic scrolls, used for enchanting, and new treasure enchantments",
   "authors": [
-    "Wookash Fryc"
+    "Wookash Fryc",
+    "sheslong (artist)"
   ],
   "contact": {
-    "email": "frycmod@gmail.com"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/scrolls-and-curses",
+    "sources": "https://github.com/Xires87/ScrollsAndCurses",
+    "issues": "https://github.com/Xires87/ScrollsAndCurses/issues"
   },
 
   "license": "MIT",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/frycscrolls/textures/item/cursed_scroll.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fryc.endercurse.EnderCurse"
+      "net.fryc.frycscrolls.FrycScrolls"
     ]
   },
   "mixins": [
-    "endercurse.mixins.json"
+    "frycscrolls.mixins.json"
   ],
 
   "depends": {

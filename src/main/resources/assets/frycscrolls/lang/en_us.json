@@ -1,0 +1,15 @@
+{
+  "enchantment.frycscrolls.ender_curse_enchantment": "Curse of Ender",
+  "enchantment.frycscrolls.absorption_enchantment": "Absorption",
+  "enchantment.frycscrolls.amok_enchantment": "Amok",
+  "enchantment.frycscrolls.vulnerability_curse_enchantment": "Curse of Vulnerability",
+  "enchantment.frycscrolls.flames_curse_enchantment": "Curse of Flames",
+  "enchantment.frycscrolls.rust_curse_enchantment": "Curse of Rust",
+
+  "effect.frycscrolls.chaotic_teleportation": "Chaotic Teleportation",
+
+  "item.frycscrolls.torn_magic_scroll": "Torn Magic Scroll",
+  "item.frycscrolls.magic_scroll": "Magic Scroll",
+  "item.frycscrolls.powerful_magic_scroll": "Magic Scroll",
+  "item.frycscrolls.cursed_scroll": "Cursed Scroll"
+}

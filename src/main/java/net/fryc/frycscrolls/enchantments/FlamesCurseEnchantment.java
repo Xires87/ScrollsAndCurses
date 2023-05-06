@@ -1,24 +1,27 @@
-package net.fryc.endercurse.enchantments;
+package net.fryc.frycscrolls.enchantments;
 
-import net.fryc.endercurse.effects.ModEffects;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
 
 import java.util.Random;
 
-public class EnderCurseEnchantment extends Enchantment {
-    protected EnderCurseEnchantment(Rarity weight, EquipmentSlot... slotTypes) {
-        super(weight, EnchantmentTarget.WEARABLE, slotTypes);
+public class FlamesCurseEnchantment extends Enchantment {
+    protected FlamesCurseEnchantment(Rarity weight, EquipmentSlot... slotTypes) {
+        super(weight, EnchantmentTarget.WEAPON , slotTypes);
     }
 
     Random random = new Random();
 
-    public void onUserDamaged(LivingEntity user, Entity attacker, int level) {
-        if(random.nextInt(0,100) >= 93) user.addStatusEffect(new StatusEffectInstance(ModEffects.ENDER_CURSE, 240 + random.nextInt(0 , 240), 0));
+    public void onTargetDamaged(LivingEntity user, Entity target, int level) {
+        if(!user.getWorld().isClient()){
+            if(target.isOnFire() || target.isInLava()){
+                user.setOnFireFor(3);
+            }
+            else if(random.nextInt(0, 100) > 83 && !target.isFireImmune()) target.setOnFireFor(4);
+        }
     }
 
     public int getMinPower(int level) {
@@ -28,11 +31,11 @@ public class EnderCurseEnchantment extends Enchantment {
     public int getMaxPower(int level) {
         return 50;
     }
+
     @Override
     public int getMaxLevel() {
         return 1;
     }
-
     @Override
     public boolean isTreasure() {
         return true;

@@ -1,4 +1,4 @@
-package net.fryc.endercurse.enchantments;
+package net.fryc.frycscrolls.enchantments;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -17,6 +17,13 @@ public class AbsorptionEnchantment extends Enchantment {
         if(!user.hasStatusEffect(StatusEffects.ABSORPTION)) user.addStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 1200, 0));
     }
 
+    public int getMinPower(int level) {
+        return 25;
+    }
+
+    public int getMaxPower(int level) {
+        return 75;
+    }
     public int getMaxLevel() {
         return 1;
     }

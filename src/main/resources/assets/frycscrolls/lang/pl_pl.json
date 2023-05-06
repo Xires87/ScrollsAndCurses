@@ -1,0 +1,15 @@
+{
+  "enchantment.frycscrolls.ender_curse_enchantment": "Klątwa Endu",
+  "enchantment.frycscrolls.absorption_enchantment": "Absorpcja",
+  "enchantment.frycscrolls.amok_enchantment": "Amok",
+  "enchantment.frycscrolls.vulnerability_curse_enchantment": "Klątwa Wrażliwości",
+  "enchantment.frycscrolls.flames_curse_enchantment": "Klątwa Płomieni",
+  "enchantment.frycscrolls.rust_curse_enchantment": "Klątwa Rdzy",
+
+  "effect.frycscrolls.chaotic_teleportation": "Chaotyczna Teleportacja",
+
+  "item.frycscrolls.torn_magic_scroll": "Podarty Magiczny Zwój",
+  "item.frycscrolls.magic_scroll": "Magiczny Zwój",
+  "item.frycscrolls.powerful_magic_scroll": "Magiczny Zwój",
+  "item.frycscrolls.cursed_scroll": "Przeklęty Zwój"
+}

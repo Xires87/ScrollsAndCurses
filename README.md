@@ -1,2 +1,4 @@
-# EnderCurse
-This mod adds one enchantment, one curse enchantment and one status effect related to the curse enchantment.
+# Scrolls and Curses
+Adds magic scrolls, used for enchanting, and new treasure enchantments (unobtainable through normal enchanting).
+
+# [CurseForge](https://www.curseforge.com/minecraft/mc-mods/scrolls-and-curses)

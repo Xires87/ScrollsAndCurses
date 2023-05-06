@@ -1,30 +1,46 @@
-package net.fryc.endercurse.effects;
+package net.fryc.frycscrolls.effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+
 
 import java.util.Random;
 
-public class EnderCurseEffect extends StatusEffect {
-    public EnderCurseEffect(StatusEffectCategory statusEffectCategory, int color) {
+public class ChaoticTeleportationEffect extends StatusEffect {
+    public ChaoticTeleportationEffect(StatusEffectCategory statusEffectCategory, int color) {
         super(statusEffectCategory, color);
     }
 
     Random random = new Random();
 
+
     @Override
     public void applyUpdateEffect(LivingEntity pLivingEntity, int pAmplifier) {
         if (!pLivingEntity.world.isClient()) {
             double x = pLivingEntity.getX(), y= pLivingEntity.getY(), z=pLivingEntity.getZ();
+
+
             pLivingEntity.teleport(x,y,z,true);
+
             x+= random.nextInt(-10, 10);
+            y+= random.nextInt(10);
             z+= random.nextInt(-10, 10);
+            BlockPos.Mutable mutable = new BlockPos.Mutable(x, y, z);
+
             pLivingEntity.world.playSound(null, pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-            pLivingEntity.teleport(x,y,z);
-            while(pLivingEntity.isInsideWall()) pLivingEntity.teleport(pLivingEntity.getX(),pLivingEntity.getY() + 3,pLivingEntity.getZ());
+
+            while(mutable.getY() > pLivingEntity.world.getBottomY() && !pLivingEntity.world.getBlockState(mutable).getMaterial().blocksMovement()) {
+                mutable.move(Direction.DOWN);
+            }
+
+            mutable.move(Direction.UP);
+
+            pLivingEntity.teleport(mutable.getX(), mutable.getY(), mutable.getZ());
         }
 
         super.applyUpdateEffect(pLivingEntity, pAmplifier);
