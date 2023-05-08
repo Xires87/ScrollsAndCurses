@@ -90,6 +90,10 @@ public class ScrollItem extends Item {
         }
     }
 
+    public boolean hasGlint(ItemStack stack) {
+        return this.tier == 3 || super.hasGlint(stack);
+    }
+
     public static boolean hasOnlyOneItemInOffStack(PlayerEntity user){
         return user.getOffHandStack().getCount() == 1;
     }

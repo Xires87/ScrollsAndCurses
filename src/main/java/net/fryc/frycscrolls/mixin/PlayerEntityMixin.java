@@ -27,15 +27,19 @@ abstract class PlayerEntityMixin extends LivingEntity {
             if(!dys.hasStatusEffect(StatusEffects.STRENGTH)){
                 dys.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 200));
             }
-            else if(dys.getActiveStatusEffects().get(StatusEffects.STRENGTH).getDuration() < 200){
-                dys.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 200));
+            else {
+                int amp = dys.getActiveStatusEffects().get(StatusEffects.STRENGTH).getAmplifier();
+                int dur = dys.getActiveStatusEffects().get(StatusEffects.STRENGTH).getDuration();
+                dys.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, dur + 200, amp));
             }
 
             if(!dys.hasStatusEffect(StatusEffects.SPEED)){
                 dys.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200));
             }
-            else if(dys.getActiveStatusEffects().get(StatusEffects.SPEED).getDuration() < 200){
-                dys.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200));
+            else {
+                int amp = dys.getActiveStatusEffects().get(StatusEffects.SPEED).getAmplifier();
+                int dur = dys.getActiveStatusEffects().get(StatusEffects.SPEED).getDuration();
+                dys.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, dur + 200, amp));
             }
         }
     }

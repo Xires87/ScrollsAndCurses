@@ -5,6 +5,8 @@ import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 
@@ -44,5 +46,9 @@ public class FlamesCurseEnchantment extends Enchantment {
     @Override
     public boolean isCursed() {
         return true;
+    }
+
+    public boolean isAcceptableItem(ItemStack stack) {
+        return stack.getItem() instanceof AxeItem || super.isAcceptableItem(stack);
     }
 }
