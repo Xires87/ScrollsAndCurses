@@ -34,7 +34,7 @@ public class ModItems {
         ItemGroup SCROLLS_AND_CURSES = FabricItemGroup.builder(new Identifier(FrycScrolls.MOD_ID, "scrolls_and_curses_item_group"))
                 .displayName(Text.literal("Scrolls and Curses"))
                 .icon(() -> new ItemStack(ModItems.POWERFUL_MAGIC_SCROLL))
-                .entries((enabledFeatures, entries, operatorEnabled) -> {
+                .entries((enabledFeatures, entries) -> {
                     entries.add(ModItems.TORN_MAGIC_SCROLL);
                     entries.add(ModItems.MAGIC_SCROLL);
                     entries.add(ModItems.CURSED_SCROLL);

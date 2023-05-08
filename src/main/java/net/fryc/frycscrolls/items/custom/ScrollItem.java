@@ -142,7 +142,7 @@ public class ScrollItem extends Item {
                             enchantment = (Enchantment)var6.next();
                         } while(!enchantment.isTreasure());
                     } while(!enchantment.isAvailableForRandomSelection());
-                } while(!enchantment.type.isAcceptableItem(item) && !bl);
+                } while(!enchantment.target.isAcceptableItem(item) && !bl);
 
                 for(int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
                     if (power >= enchantment.getMinPower(i) && power <= enchantment.getMaxPower(i)) {
