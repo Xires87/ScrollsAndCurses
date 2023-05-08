@@ -10,12 +10,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class ScrollItem extends Item {
                         if(!list.isEmpty()){
                             for(int i = 0; i < list.size(); ++i) {
                                 NbtCompound nbtCompound = list.getCompound(i);
-                                Registry.ENCHANTMENT.getOrEmpty(EnchantmentHelper.getIdFromNbt(nbtCompound)).ifPresent((enchantment) -> {
+                                Registries.ENCHANTMENT.getOrEmpty(EnchantmentHelper.getIdFromNbt(nbtCompound)).ifPresent((enchantment) -> {
                                     if(enchantment.isTreasure()){
                                         multiplier.getAndAdd(2);
                                         treasureEn.add(enchantment);
@@ -127,7 +127,7 @@ public class ScrollItem extends Item {
         List<EnchantmentLevelEntry> list = Lists.newArrayList();
         Item item = stack.getItem();
         boolean bl = stack.isOf(Items.BOOK);
-        Iterator var6 = Registry.ENCHANTMENT.iterator();
+        Iterator var6 = Registries.ENCHANTMENT.iterator();
 
         while(true) {
             while(true) {

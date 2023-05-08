@@ -18,6 +18,6 @@ public class FrycScrolls implements ModInitializer {
 		ModItems.registerModItems();
 		ModEnchantments.registerModEnchantments();
 		ModEffects.registerEffects();
-		ModLootTables.modifyLootTables(); // todo tekstury
+		ModLootTables.modifyLootTables();
 	}
 }
