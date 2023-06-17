@@ -21,7 +21,7 @@ public class ChaoticTeleportationEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity pLivingEntity, int pAmplifier) {
-        if (!pLivingEntity.world.isClient()) {
+        if (!pLivingEntity.getWorld().isClient()) {
             double x = pLivingEntity.getX(), y= pLivingEntity.getY(), z=pLivingEntity.getZ();
 
 
@@ -32,9 +32,9 @@ public class ChaoticTeleportationEffect extends StatusEffect {
             z+= random.nextInt(-10, 10);
             BlockPos.Mutable mutable = new BlockPos.Mutable(x, y, z);
 
-            pLivingEntity.world.playSound(null, pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            pLivingEntity.getWorld().playSound(null, pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
-            while(mutable.getY() > pLivingEntity.world.getBottomY() && !pLivingEntity.world.getBlockState(mutable).getMaterial().blocksMovement()) {
+            while(mutable.getY() > pLivingEntity.getWorld().getBottomY() && !pLivingEntity.getWorld().getBlockState(mutable).blocksMovement()) {
                 mutable.move(Direction.DOWN);
             }
 
