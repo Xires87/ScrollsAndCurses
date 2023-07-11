@@ -20,6 +20,8 @@ public class ModEffects {
     }
 
     public static void registerEffects() {
-        CHAOTIC_TELEPORTATION = registerStatusEffect("chaotic_teleportation", chaotic_teleportation);
+        if(CHAOTIC_TELEPORTATION == null){
+            CHAOTIC_TELEPORTATION = registerStatusEffect("chaotic_teleportation", chaotic_teleportation);
+        }
     }
 }
