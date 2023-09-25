@@ -34,13 +34,13 @@ public class ChaoticTeleportationEffect extends StatusEffect {
             pLivingEntity.getWorld().playSound(null, pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
 
-            while(mutable.getY() > pLivingEntity.getWorld().getBottomY() && pLivingEntity.getWorld().getBlockState(mutable).isAir()) {
+            while(mutable.getY() > pLivingEntity.getWorld().getBottomY() && !pLivingEntity.getWorld().getBlockState(mutable).getMaterial().blocksMovement()) {
                 mutable.move(Direction.DOWN);
             }
 
             do{
                 mutable.move(Direction.UP);
-            }while(!pLivingEntity.getWorld().getBlockState(mutable).isAir());
+            }while(!pLivingEntity.getWorld().getBlockState(mutable).isAir() && !pLivingEntity.getWorld().getBlockState(mutable).getMaterial().isLiquid());
 
 
             pLivingEntity.teleport(mutable.getX(), mutable.getY(), mutable.getZ());
