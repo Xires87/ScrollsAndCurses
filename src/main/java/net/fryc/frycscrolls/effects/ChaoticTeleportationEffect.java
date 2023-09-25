@@ -8,7 +8,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-
 import java.util.Random;
 
 public class ChaoticTeleportationEffect extends StatusEffect {
@@ -28,17 +27,21 @@ public class ChaoticTeleportationEffect extends StatusEffect {
             pLivingEntity.teleport(x,y,z,true);
 
             x+= random.nextInt(-10, 10);
-            y+= random.nextInt(10);
+            y+= random.nextInt(2);
             z+= random.nextInt(-10, 10);
             BlockPos.Mutable mutable = new BlockPos.Mutable(x, y, z);
 
             pLivingEntity.getWorld().playSound(null, pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
+
             while(mutable.getY() > pLivingEntity.getWorld().getBottomY() && !pLivingEntity.getWorld().getBlockState(mutable).blocksMovement()) {
                 mutable.move(Direction.DOWN);
             }
 
-            mutable.move(Direction.UP);
+            do{
+                mutable.move(Direction.UP);
+            }while(!pLivingEntity.getWorld().getBlockState(mutable).isAir() && !pLivingEntity.getWorld().getBlockState(mutable).isLiquid());
+
 
             pLivingEntity.teleport(mutable.getX(), mutable.getY(), mutable.getZ());
         }
