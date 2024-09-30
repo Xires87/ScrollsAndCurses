@@ -19,12 +19,13 @@ public class ChaoticTeleportationEffect extends StatusEffect {
 
 
     @Override
-    public void applyUpdateEffect(LivingEntity pLivingEntity, int pAmplifier) {
+    public boolean applyUpdateEffect(LivingEntity pLivingEntity, int pAmplifier) {
         if (!pLivingEntity.getWorld().isClient()) {
             double x = pLivingEntity.getX(), y= pLivingEntity.getY(), z=pLivingEntity.getZ();
 
 
-            pLivingEntity.teleport(x,y,z,true);
+            //pLivingEntity.teleport(x,y,z,true);
+            pLivingEntity.getWorld().sendEntityStatus(pLivingEntity, (byte)46);
 
             x+= random.nextInt(-10, 10);
             y+= random.nextInt(2);
@@ -43,10 +44,10 @@ public class ChaoticTeleportationEffect extends StatusEffect {
             }while(!pLivingEntity.getWorld().getBlockState(mutable).isAir() && !pLivingEntity.getWorld().getBlockState(mutable).isLiquid());
 
 
-            pLivingEntity.teleport(mutable.getX(), mutable.getY(), mutable.getZ());
+            pLivingEntity.teleport(mutable.getX(), mutable.getY(), mutable.getZ(), false);
         }
 
-        super.applyUpdateEffect(pLivingEntity, pAmplifier);
+        return super.applyUpdateEffect(pLivingEntity, pAmplifier);
     }
 
     @Override
