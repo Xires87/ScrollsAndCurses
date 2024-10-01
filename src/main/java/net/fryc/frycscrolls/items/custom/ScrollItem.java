@@ -2,15 +2,18 @@ package net.fryc.frycscrolls.items.custom;
 
 import com.google.common.collect.Lists;
 import net.fryc.frycscrolls.items.ModItems;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.Registries;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
@@ -19,9 +22,9 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 
 public class ScrollItem extends Item {
@@ -35,7 +38,6 @@ public class ScrollItem extends Item {
     }
 
 
-
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.getMainHandStack().getItem() instanceof ScrollItem) {
             ItemStack itemStack = user.getStackInHand(hand);
@@ -44,34 +46,39 @@ public class ScrollItem extends Item {
                 //cursed scroll
                 if(this.getDefaultStack().isOf(ModItems.CURSED_SCROLL)){
                     if(!offStack.isEnchantable() && !offStack.hasEnchantments()) return TypedActionResult.pass(itemStack);
-                    if(!user.getWorld().isClient()){
-                        AtomicInteger multiplier = new AtomicInteger();
-                        NbtList list = offStack.getEnchantments();
-                        ArrayList<Enchantment> treasureEn = new ArrayList<>();
-                        if(!list.isEmpty()){
-                            for(int i = 0; i < list.size(); ++i) {
-                                NbtCompound nbtCompound = list.getCompound(i);
-                                Registries.ENCHANTMENT.getOrEmpty(EnchantmentHelper.getIdFromNbt(nbtCompound)).ifPresent((enchantment) -> {
-                                    if(enchantment.isTreasure()){
-                                        multiplier.getAndAdd(2);
-                                        treasureEn.add(enchantment);
-                                    }
-                                    multiplier.getAndAdd(EnchantmentHelper.getLevelFromNbt(nbtCompound));
-                                });
-                            }
+                    ItemEnchantmentsComponent enchantments = offStack.getEnchantments();
+                    ArrayList<RegistryEntry<Enchantment>> existingTreasures = new ArrayList<>();
+                    int multiplier = 0;
+                    for (RegistryEntry<Enchantment> currentEnchantment : enchantments.getEnchantments()) {
+                        if(currentEnchantment.isIn(EnchantmentTags.TREASURE)){
+                            existingTreasures.add(currentEnchantment);
+                            multiplier += 2;
                         }
-
-                        boolean notCursed = random.nextInt(100) >= 4 + multiplier.get() * 6;
-                        Enchantment enchantment = getRandomTreasureEnchantment(offStack, treasureEn, notCursed);
-                        offStack.addEnchantment(enchantment, enchantment.getMaxLevel());
+                        else {
+                            multiplier += enchantments.getLevel(currentEnchantment);
+                        }
                     }
 
+                    boolean notCursed = random.nextInt(100) >= 4 + multiplier * 6;
+                    RegistryEntry<Enchantment> enchantment = getRandomTreasureEnchantment(offStack, world, existingTreasures, notCursed);
+                    if(existingTreasures.contains(enchantment)){
+                        return TypedActionResult.fail(itemStack);
+                    }
+                    if(!user.getWorld().isClient()){
+                        offStack.addEnchantment(enchantment, enchantment.value().getMaxLevel());
+                    }
                 }
                 //magic scroll
                 else if(offStack.isEnchantable()){
-                    if(!user.getWorld().isClient()){
-                        int level = (random.nextInt(this.tier*6)+1) + ((this.tier-1)*10);
-                        EnchantmentHelper.enchant(random, offStack, level, true);
+                    int level = (random.nextInt(this.tier*6)+1) + ((this.tier-1)*8);
+                    Optional<RegistryEntryList.Named<Enchantment>> optional = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.ON_RANDOM_LOOT);
+                    if(optional.isPresent()){
+                        if(!user.getWorld().isClient()){
+                            EnchantmentHelper.enchant(random, offStack, level, optional.get().stream());
+                        }
+                    }
+                    else {
+                        return TypedActionResult.fail(itemStack);
                     }
                 }
                 else{
@@ -98,61 +105,71 @@ public class ScrollItem extends Item {
         return user.getOffHandStack().getCount() == 1;
     }
 
+    private static RegistryEntry<Enchantment> getRandomTreasureEnchantment(ItemStack stack, World world, ArrayList<RegistryEntry<Enchantment>> existingTreasures, boolean cursed){
+        return getRandomTreasureEnchantment(stack, world, existingTreasures, cursed, true);
+    }
 
     //returns random treasure enchantment available for given item (gives Curse Of Vanishing if item has all available treasure enchantments)
-    private static Enchantment getRandomTreasureEnchantment(ItemStack stack, ArrayList<Enchantment> existingTreasures, boolean cursed){
-        List<EnchantmentLevelEntry> list = getPossibleTreasureEntries(35, stack);
-        Enchantment enchantment;
-        int i = list.size(), rand;
-        if(i <= existingTreasures.size()) return Enchantments.VANISHING_CURSE;
-        do{
+    private static RegistryEntry<Enchantment> getRandomTreasureEnchantment(ItemStack stack, World world, ArrayList<RegistryEntry<Enchantment>> existingTreasures, boolean cursed, boolean repeatIfNeeded){
+        Optional<RegistryEntryList.Named<Enchantment>> optional = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.TREASURE);
+        if(optional.isEmpty()){
+            return getDefaultEnchantment(world);
+        }
+        else {
+            List<EnchantmentLevelEntry> list = getPossibleTreasureEntries(35, stack, optional.get().stream());
+            int size = list.size();
+            if(size <= existingTreasures.size()) return getDefaultEnchantment(world);
+            RegistryEntry<Enchantment> enchantment;
+            int randomNumber;
+
             do{
-                rand = random.nextInt(i);
-                enchantment = list.get(rand).enchantment;
-                list.remove(rand);
-                i--;
-                if(i <= 0){
-                    if(!existingTreasures.contains(enchantment)) return enchantment;
-                    return getRandomTreasureEnchantment(stack, new ArrayList<>(), !cursed);
-                }
-            }while(existingTreasures.contains(enchantment));
-        }while((enchantment.isCursed() && !cursed) || (!enchantment.isCursed() && cursed));
-
-        return enchantment;
-    }
-
-
-    //returns list of treasure enchantments available for given item
-    private static List<EnchantmentLevelEntry> getPossibleTreasureEntries(int power, ItemStack stack) {
-        List<EnchantmentLevelEntry> list = Lists.newArrayList();
-        Item item = stack.getItem();
-        boolean bl = stack.isOf(Items.BOOK);
-        Iterator var6 = Registries.ENCHANTMENT.iterator();
-
-        while(true) {
-            while(true) {
-                Enchantment enchantment;
-                do {
-                    do {
-                        do {
-                            if (!var6.hasNext()) {
-                                return list;
-                            }
-
-                            enchantment = (Enchantment)var6.next();
-                        } while(!enchantment.isTreasure());
-                    } while(!enchantment.isAvailableForRandomSelection());
-                } while(!enchantment.target.isAcceptableItem(item) && !bl);
-
-                for(int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
-                    if (power >= enchantment.getMinPower(i) && power <= enchantment.getMaxPower(i)) {
-                        list.add(new EnchantmentLevelEntry(enchantment, i));
-                        break;
+                do{
+                    randomNumber = random.nextInt(size);
+                    enchantment = list.get(randomNumber).enchantment;
+                    list.remove(randomNumber);
+                    size--;
+                    if(size < 1){
+                        if(!existingTreasures.contains(enchantment) && ((enchantment.isIn(EnchantmentTags.CURSE) && cursed) || (!enchantment.isIn(EnchantmentTags.CURSE) && !cursed))){
+                            return enchantment;
+                        }
+                        else if(repeatIfNeeded){
+                            return getRandomTreasureEnchantment(stack, world, existingTreasures, !cursed, false);
+                        }
+                        else {
+                            return getDefaultEnchantment(world);
+                        }
                     }
-                }
-            }
+                }while(existingTreasures.contains(enchantment));
+            }while((enchantment.isIn(EnchantmentTags.CURSE) && !cursed) || (!enchantment.isIn(EnchantmentTags.CURSE) && cursed));
+
+            return enchantment;
         }
     }
+
+    private static RegistryEntry<Enchantment> getDefaultEnchantment(World world){
+        return world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.VANISHING_CURSE);
+    }
+
+
+    public static List<EnchantmentLevelEntry> getPossibleTreasureEntries(int level, ItemStack stack, Stream<RegistryEntry<Enchantment>> possibleEnchantments) {
+        List<EnchantmentLevelEntry> list = Lists.newArrayList();
+        possibleEnchantments.filter((enchantment) -> {
+            return enchantment.isIn(EnchantmentTags.TREASURE) && enchantment.value().isAcceptableItem(stack);
+        }).forEach((enchantmentx) -> {
+            Enchantment enchantment = (Enchantment)enchantmentx.value();
+
+            for(int j = enchantment.getMaxLevel(); j >= enchantment.getMinLevel(); --j) {
+                if (level >= enchantment.getMinPower(j) && level <= enchantment.getMaxPower(j)) {
+                    list.add(new EnchantmentLevelEntry(enchantmentx, j));
+                    break;
+                }
+            }
+
+        });
+        return list;
+    }
+
+
 
 
 }

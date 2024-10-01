@@ -26,7 +26,7 @@ public class ModItems {
             new ScrollItem(new Item.Settings().maxCount(4), 2));
 
     public static final Item POWERFUL_MAGIC_SCROLL = registerItem("powerful_magic_scroll" ,
-            new ScrollItem(new Item.Settings().maxCount(4).rarity(Rarity.RARE), 3));
+            new ScrollItem(new Item.Settings().maxCount(4).rarity(Rarity.RARE), 4));
 
     public static final Item CURSED_SCROLL = registerItem("cursed_scroll" ,
             new ScrollItem(new Item.Settings().maxCount(4).rarity(Rarity.UNCOMMON), 3));
