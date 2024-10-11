@@ -1,0 +1,16 @@
+{
+  "enchantment.frycscrolls.ender_curse_enchantment": "末影诅咒",
+  "enchantment.frycscrolls.absorption_enchantment": "吸收",
+  "enchantment.frycscrolls.amok_enchantment": "失心癫狂",
+  "enchantment.frycscrolls.vulnerability_curse_enchantment": "脆弱诅咒",
+  "enchantment.frycscrolls.flames_curse_enchantment": "燃烧诅咒",
+  "enchantment.frycscrolls.rust_curse_enchantment": "锈斑诅咒",
+
+  "effect.frycscrolls.chaotic_teleportation": "混沌位移",
+  "effect.frycscrolls.absorption_cooldown": "吸收冷却",
+
+  "item.frycscrolls.torn_magic_scroll": "魔法卷轴碎片",
+  "item.frycscrolls.magic_scroll": "魔法卷轴",
+  "item.frycscrolls.powerful_magic_scroll": "魔法卷轴",
+  "item.frycscrolls.cursed_scroll": "诅咒卷轴"
+}
